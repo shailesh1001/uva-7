@@ -37,7 +37,7 @@ int nAdd(int x, int y) {
 }
 
 int run_instruction(int loc, int war, instruction_t *memory) {
-  int Aoffset, Boffset;
+  int Aoffset, Boffset, Aadd,Badd;
   Aoffset = nAdd(loc, memory[loc].fieldA.val);
   if (memory[loc].fieldA.type == indirect)
     Aoffset = nAdd(memory[Aoffset].fieldB.val, Aoffset);
@@ -64,8 +64,10 @@ int run_instruction(int loc, int war, instruction_t *memory) {
         memory[Boffset].fieldB.val = nAdd(memory[Boffset].fieldB.val, memory[loc].fieldA.val);
         break;
       }
-      memory[Boffset].fieldB.val = nAdd(memory[Boffset].fieldB.val, memory[Aoffset].fieldB.val);
-      memory[Aoffset].fieldA.val = nAdd(memory[Aoffset].fieldA.val, memory[Aoffset].fieldA.val);
+      Aadd = nAdd(memory[Aoffset].fieldA.val, memory[Boffset].fieldA.val);
+      Badd = nAdd(memory[Aoffset].fieldB.val, memory[Boffset].fieldB.val);
+      memory[Boffset].fieldA.val = Aadd;
+      memory[Boffset].fieldB.val = Badd;
       break;
     case JMP:
       return Aoffset;
