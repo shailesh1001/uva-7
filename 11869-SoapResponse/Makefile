@@ -1,12 +1,12 @@
 
-CC= gcc
+CC= clang
 CFLAGS= -ansi -pedantic -Wall -Wextra -g
-SOURCES= calculus.c
-PROGRAM= calculus
+SOURCES= soap.c
+PROGRAM= soap
 
 $(PROGRAM) : $(SOURCES)
 	$(CC) $(CFLAGS) $(SOURCES) -o $(PROGRAM)
-		
+	
 clean :
 	rm -f $(PROGRAM)
 
