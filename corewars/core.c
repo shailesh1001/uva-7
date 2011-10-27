@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #define printd if (DEBUG) printf
 
 enum ops { DAT, MOV, ADD, JMP, JMZ, SLT, CMP };
@@ -25,8 +25,7 @@ typedef struct {
   field_t fieldB;
 } instruction_t;
 
-int nAdd(int x, int y) {
-  int r = x+y;
+int norm(int r) {
   while (r < 0 || r > 7999) {
     if (r < 0)
       r+= 8000;
@@ -34,6 +33,12 @@ int nAdd(int x, int y) {
       r-= 8000;
   }
   return r;
+}
+int nAdd(int x, int y) {
+  x = norm(x);
+  y = norm(y);
+  int r = x+y;
+  return norm(r);
 }
 
 int run_instruction(int loc, int war, instruction_t *memory) {
@@ -77,11 +82,11 @@ int run_instruction(int loc, int war, instruction_t *memory) {
       break;
     case SLT:
       if (memory[loc].fieldA.type == immediate) {
-        if (memory[loc].fieldA.val < memory[Boffset].fieldB.val)
+        if ((norm(memory[loc].fieldA.val) < norm(memory[Boffset].fieldB.val)))
           return nAdd(loc,2);
         break;
       }
-      if (memory[Aoffset].fieldB.val < memory[Boffset].fieldB.val)
+      if ((norm(memory[Aoffset].fieldB.val) < norm(memory[Boffset].fieldB.val)))
         return nAdd(loc,2);
       break;
     case CMP:
